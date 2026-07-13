@@ -41,7 +41,6 @@ bo_reaction_demo/
 ├── plot_results.py        # results plotting
 └── README.md
 \```
----
 
 ## Build stages
 
