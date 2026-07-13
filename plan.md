@@ -44,14 +44,14 @@ bo_reaction_demo/
 
 ## Build stages
 
-1. **Data + featurization** — Load CSV, inspect columns, one-hot encode the 4 categorical dimensions → X (45 cols), y = yield.
-2. **GP surrogate** — Matern kernel (vs RBF), `alpha` (noise), `normalize_y`, `predict(return_std=True)` = posterior mean + uncertainty.
-3. **Acquisition — Expected Improvement** — Implement EI from the math; the mean/uncertainty balance, the `xi` explore/exploit parameter, and masking already-seen points.
-4. **BO loop** — init random subset → fit GP on seen → EI over full space → pick argmax unseen → reveal known yield → append → refit. Track `best_yield_so_far` per iteration.
-5. **Random-search baseline** — Same budget, random pick each step, track best-so-far.
-6. **Multi-seed averaging + xi sweep** — Run BO + random over ~20 seeds; average curves with std shading. Add a third curve: BO high-`xi` (explore) vs low-`xi` (exploit).
-7. **Results plot** — X = experiments run, Y = best yield found. Curves: BO, random, xi sweep. Annotate the experiments-saved gap (e.g. "90% of max in ~15 vs ~70").
-8. **Descriptor featurization (v2)** — Swap 45 one-hot cols → 120 DFT descriptor cols already in the file. Attempt after stage 7 is solid.
+1. **Data + featurization** — Load CSV, inspect columns, one-hot encode the 4 categorical dimensions → X (45 cols), y = yield. `[vibe code — standard pandas wrangling]`
+2. **GP surrogate** — Matern kernel (vs RBF), `alpha` (noise), `normalize_y`, `predict(return_std=True)` = posterior mean + uncertainty. `[write by hand — need to justify kernel/config choices]`
+3. **Acquisition — Expected Improvement** — Implement EI from the math; the mean/uncertainty balance, the `xi` explore/exploit parameter, and masking already-seen points. `[write by hand — core math, easy to get subtly wrong]`
+4. **BO loop** — init random subset → fit GP on seen → EI over full space → pick argmax unseen → reveal known yield → append → refit. Track `best_yield_so_far` per iteration. `[write by hand — the control-flow logic that ties everything together]`
+5. **Random-search baseline** — Same budget, random pick each step, track best-so-far. `[vibe code — trivial]`
+6. **Multi-seed averaging + xi sweep** — Run BO + random over ~20 seeds; average curves with std shading. Add a third curve: BO high-`xi` (explore) vs low-`xi` (exploit). `[vibe code — plumbing/looping over existing stages]`
+7. **Results plot** — X = experiments run, Y = best yield found. Curves: BO, random, xi sweep. Annotate the experiments-saved gap (e.g. "90% of max in ~15 vs ~70"). `[vibe code — matplotlib styling/polish]`
+8. **Descriptor featurization (v2)** — Swap 45 one-hot cols → 120 DFT descriptor cols already in the file. Attempt after stage 7 is solid. `[vibe code — same shape as stage 1]`
 
 ---
 
