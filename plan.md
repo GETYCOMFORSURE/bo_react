@@ -21,9 +21,16 @@ Build a working, fully-understood BO pipeline on a public reaction-yield benchma
 ---
 
 ## Project structure
-
-bo_reaction_demo/ ├── data/ # BHpredict CSV ├── featurize.py # data loading + featurization ├── gp_model.py # Gaussian Process surrogate ├── acquisition.py # Expected Improvement ├── bo_loop.py # main optimization loop ├── baseline.py # random-search baseline ├── run_experiment.py # orchestration ├── plot_results.py # results plotting └── README.md
-
+bo_reaction_demo/
+├── data/                  # BHpredict CSV
+├── featurize.py           # data loading + featurization
+├── gp_model.py            # Gaussian Process surrogate
+├── acquisition.py         # Expected Improvement
+├── bo_loop.py              # main optimization loop
+├── baseline.py            # random-search baseline
+├── run_experiment.py      # orchestration
+├── plot_results.py        # results plotting
+└── README.md
 
 ---
 
