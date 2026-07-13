@@ -1,4 +1,3 @@
-"""
 # ReactOpt — "Should you keep screening this space?"
 
 An AI-native reaction discovery engine that estimates whether a parameter
