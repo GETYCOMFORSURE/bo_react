@@ -29,7 +29,7 @@ markdown- Source: Ahneman, Estrada, Lin, Dreher, Doyle, *Science* 2018. Mirror: 
 
 ## Project structure
 
-\```
+```
 bo_reaction_demo/
 ├── data/                  # BHpredict CSV
 ├── featurize.py           # data loading + featurization
@@ -40,7 +40,7 @@ bo_reaction_demo/
 ├── run_experiment.py      # orchestration
 ├── plot_results.py        # results plotting
 └── README.md
-\```
+```
 
 ## Build stages
 
