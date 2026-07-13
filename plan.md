@@ -1,72 +1,53 @@
-# ReactOpt — "Should you keep screening this space?"
+# Mini Bayesian Optimization for Reaction Yield
 
-An AI-native reaction discovery engine that estimates whether a parameter
-space has a ceiling worth chasing — not just a faster BO.
+**Summary**
+A closed-loop Bayesian optimization demo on the Buchwald–Hartwig HTE dataset that reaches near-maximum yield in far fewer experiments than random screening — a small, transparent reproduction of the core optimization loop used in data-driven reaction development.
 
-**Total core: ~42–50 hours of focused work**
+**Goal**
+Build a working, fully-understood BO pipeline on a public reaction-yield benchmark, prioritizing clarity and correctness over sophistication.
 
-Tags: 🤖 = safe to vibe code (boilerplate/infra) | 🧠 = write it myself
+**Timeline:** ~5 focused days.
 
-## 1. Setup & data foundation — ~5–7 hrs 🤖
+---
 
-- Repo scaffolding, environment (Python, PyTorch, RDKit, BoTorch/GPyTorch), clean structure — 1 hr
-- Load a public HTE dataset (Doyle/Dreher Buchwald–Hartwig, or Perera Suzuki) — 1.5 hrs
-- EDA: yield distributions, missing values, understand the search space — 1.5 hrs
-- Define the search space object (categorical: catalyst/ligand/base/solvent; continuous: temp/conc/time) — 1.5 hrs
+## Dataset
 
-## 2. Molecular featurization — ~5–6 hrs 🤖
+- Source: Ahneman, Estrada, Lin, Dreher, Doyle, *Science* 2018. Mirror: [thisisntnathan/BHpredict](https://github.com/thisisntnathan/BHpredict) (CSV + PKL, includes 120 DFT features).
+- Structure: 15 aryl/heteroaryl halides × 4 Buchwald ligands × 3 bases × 23 isoxazole additives (Glorius fragment-additive screen) → ~4,140–4,608 reactions incl. controls; ~3,720 usable after dropping missing yields.
+- ~30% of reactions are zero/near-zero yield (failed region included by design).
+- Feature options in the same file: 45 one-hot columns (v1) or 120 DFT descriptors (v2).
+- Reference benchmark: original random-forest ≈ R² 0.83, RMSE ~11.3% out-of-sample (sanity target for the GP).
 
-- RDKit: parse SMILES for catalysts/ligands, generate Morgan fingerprints + descriptors — 2.5 hrs
-- Encoding for mixed categorical/continuous inputs (one-hot vs. fingerprint-based) — 2 hrs
-- Sanity checks + a small featurization test — 1 hr
+---
 
-## 3. Baselines & simulation harness — ~5–6 hrs 🤖
+## Project structure
 
-- Closed-loop simulator that queries the dataset as if running experiments — 2.5 hrs
-- Random search + grid/exhaustive search baselines — 1.5 hrs
-- Metrics + logging (best-yield-so-far, experiments-to-target), multi-seed support — 2 hrs
-
-## 4. Bayesian optimization core — ~10–12 hrs 🧠
-
-- GP surrogate (BoTorch/GPyTorch, or from-scratch for extra credibility) — 4 hrs
-- Acquisition functions: EI + UCB, with the ask–tell loop — 3 hrs
-- Mixed-variable / molecular kernel (e.g., Tanimoto over fingerprints) — 3 hrs
-- Debugging + tuning the loop — 2 hrs
-
-## 5. Ceiling detection — the differentiator — ~8–10 hrs 🧠
-
-- Posterior over the max: sample functions from the GP posterior, take the max of
-  each → distribution over the achievable ceiling, with uncertainty — 4 hrs
-- "Stop / keep going" decision rule: report the posterior ceiling estimate +
-  credible interval each step; flag when the ceiling is confidently below a
-  useful threshold — 2.5 hrs
-- Calibration check: on datasets with a known true max, does the ceiling
-  estimate converge, and is the uncertainty honest? — 2.5 hrs
-
-## 6. Benchmark experiments & the headline plot — ~4–5 hrs 🤖
-
-- Run all methods across many seeds, aggregate — 2 hrs
-- Headline chart: posterior estimate of the space's ceiling (with shrinking
-  credible band) vs. experiments, on a low-ceiling space — showing the system
-  correctly calls it dead well before exhaustive screening would. Overlay
-  true max as a dashed line. — 2 hrs
-- Supporting table: experiments-to-confident-ceiling-call — 1 hr
-
-## 7. Write-up & demo — ~5–6 hrs 🤖 (draft) / 🧠 (claims & conclusions)
-
-- README: problem, method, results, reproducibility — 2 hrs
-- Short technical blog post: the ceiling insight, headline result, honest
-  limitations, "what I'd build next with real wet-lab data" — 2 hrs
-- 2-minute Loom demo — 1.5 hrs
-
-## Optional (only if ahead)
-
-- **Transfer-learning teaser** (~4–5 hrs) 🧠: warm-start on one reaction using
-  data from a related one — mirrors ReactWise's approach. Demoted from core;
-  legitimate as a "what I'd do next."
-- **Thin UI** (~4 hrs) 🤖: minimal Streamlit/CLI — pick space → suggested
-  experiment → log → repeat.
+bo_reaction_demo/ ├── data/ # BHpredict CSV ├── featurize.py # data loading + featurization ├── gp_model.py # Gaussian Process surrogate ├── acquisition.py # Expected Improvement ├── bo_loop.py # main optimization loop ├── baseline.py # random-search baseline ├── run_experiment.py # orchestration ├── plot_results.py # results plotting └── README.md
 
 
-Nothing here is real until the Doyle dataset loads.
-"""
+---
+
+## Build stages
+
+1. **Data + featurization** — Load CSV, inspect columns, one-hot encode the 4 categorical dimensions → X (45 cols), y = yield.
+2. **GP surrogate** — Matern kernel (vs RBF), `alpha` (noise), `normalize_y`, `predict(return_std=True)` = posterior mean + uncertainty.
+3. **Acquisition — Expected Improvement** — Implement EI from the math; the mean/uncertainty balance, the `xi` explore/exploit parameter, and masking already-seen points.
+4. **BO loop** — init random subset → fit GP on seen → EI over full space → pick argmax unseen → reveal known yield → append → refit. Track `best_yield_so_far` per iteration.
+5. **Random-search baseline** — Same budget, random pick each step, track best-so-far.
+6. **Multi-seed averaging + xi sweep** — Run BO + random over ~20 seeds; average curves with std shading. Add a third curve: BO high-`xi` (explore) vs low-`xi` (exploit).
+7. **Results plot** — X = experiments run, Y = best yield found. Curves: BO, random, xi sweep. Annotate the experiments-saved gap (e.g. "90% of max in ~15 vs ~70").
+8. **Descriptor featurization (v2)** — Swap 45 one-hot cols → 120 DFT descriptor cols already in the file. Attempt after stage 7 is solid.
+
+---
+
+## Deliverables
+
+- Clean repo + reproducible README.
+- Results plot (BO vs random vs xi sweep, with experiments-saved annotation).
+- Held-out GP sanity check (R²/RMSE in the ~0.83 / ~11% ballpark).
+
+---
+
+## Build order rule
+
+Always keep a working version; introduce only one new piece at a time. Ship v1 (one-hot) end-to-end before attempting v2 (descriptors).
