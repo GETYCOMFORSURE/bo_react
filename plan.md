@@ -13,7 +13,7 @@ Build a working, fully-understood BO pipeline on a public reaction-yield benchma
 ## Project structure
 
 ```
-bo_reaction_demo/
+bo_react/
 ├── data/                  # BHpredict CSV
 ├── featurize.py           # data loading + featurization
 ├── gp_model.py            # Gaussian Process surrogate
