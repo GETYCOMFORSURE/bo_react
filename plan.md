@@ -46,15 +46,6 @@ bo_react/
 - Reference benchmark: original random-forest ≈ R² 0.83, RMSE ~11.3% out-of-sample (sanity target for the GP).
 
 ---
-
-Here's the content from the screenshot formatted as markdown:
-markdown- Source: Ahneman, Estrada, Lin, Dreher, Doyle, *Science* 2018. Mirror: [thisisntnathan/BHpredict](https://github.com/thisisntnathan/BHpredict) (CSV + PKL, includes 120 DFT features).
-- Structure: 15 aryl/heteroaryl halides × 4 Buchwald ligands × 3 bases × 23 isoxazole additives (Glorius fragment-additive screen) → ~4,140–4,608 reactions incl. controls; ~3,720 usable after dropping missing yields.
-- ~30% of reactions are zero/near-zero yield (failed region included by design).
-- Feature options in the same file: 45 one-hot columns (v1) or 120 DFT descriptors (v2).
-- Reference benchmark: original random-forest ≈ R² 0.83, RMSE ~11.3% out-of-sample (sanity target for the GP).
-
----
 ## Deliverables
 
 - Clean repo + reproducible README.
