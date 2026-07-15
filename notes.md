@@ -19,7 +19,7 @@ TARGET_COL = "yield"
 
 if the variable's value never changes / reassigned -> uppercase
 
-**convention: X vs x*
+**convention: X vs x**
 - X: a matrix 
 - x: a vector
 
