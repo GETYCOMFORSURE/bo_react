@@ -30,6 +30,8 @@ if the variable's value never changes / reassigned -> uppercase
 ### GP surrogate config choices
 resource: [scikit-learn's GP User Guide](https://scikit-learn.org/stable/modules/gaussian_process.html)
 
+**Gaussian Processes (GP)** are a nonparametric supervised learning method used to solve regression and probabilistic classification problems.
+
 **Kernel: Matern(nu=2.5), not RBF.**
 RBF is infinitely differentiable → assumes the function is *very smooth*.
 Matern generalizes RBF with a smoothness knob (nu); nu=2.5 = rougher,
