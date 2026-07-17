@@ -3,13 +3,13 @@
 
 """
 featurize.py
-Load the BHpredict (BH_CR_numbers) CSV, one-hot encode the 4 categorical
+Load the BHpredict (data.csv), one-hot encode the 4 categorical
 dimensions, and return X (45 cols) and y (yield).
 """
 
 import pandas as pd
 
-DATA_PATH = "BH_CR_numbers.csv"
+DATA_PATH = "data.csv"
 
 CATEGORICAL_COLS = [
     "base_number",
