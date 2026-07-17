@@ -27,7 +27,7 @@ if the variable's value never changes / reassigned -> uppercase
 - Why: the GP fits on small data (dozens–hundreds of tested reactions). At that scale sklearn's GaussianProcessRegressor is exactly right — one class, .fit() / .predict(return_std=True). PyTorch/GPyTorch is for GPs on huge data needing GPU — overkill here, and reads as over-engineering.
 - The split: PyTorch = generative nets (VAE, GAN, and v2's proposer). sklearn = the GP surrogate (not a neural net, no backprop). Your repo uses both, each where it fits. That's judgment, not mess.
 
-### GP surrogate (stage 2) — config choices
+### GP surrogate config choices
 resource: [scikit-learn's GP User Guide](https://scikit-learn.org/stable/modules/gaussian_process.html)
 
 **Kernel: Matern(nu=2.5), not RBF.**
